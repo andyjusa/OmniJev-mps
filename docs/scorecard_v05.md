@@ -7,7 +7,7 @@ Held-out rows only (row-hash bucket never trained on). **Serving path** = the ex
 | LIBERO-10 long-horizon robot (held-out episodes) _(zero-shot probe 1,000 q)_ | 11288 | **0.821** | 0.820 | 0.758 | 0.765 | 0.652 / 0.810 | 0.438 | 0.081 | 0.259 | 0.00 / 0.00 |
 | Mind2Web test task/website/domain _(serving path on an 8,000-q sample; batch on all 30,260; zero-shot probe 1,000 q)_ | 8000 | **0.770** | 0.761 | 0.724 | 0.673 | - | 0.549 | 0.075 | 0.327 | 0.00 / 0.04 |
 | Grid pointing, 96 cells (web + phone) _(serving path on the web half only; batch on both halves; zero-shot probe 1,000 q (web half))_ | 2178 | **0.729** | 0.690 | 0.600 | 0.588 | - | 0.487 | 0.108 | 0.394 | 0.00 / 0.00 |
-| Wiki navigation _(batch evaluator only (data not on the A100))_ | 5744 | - | 0.701 | 0.700 | 0.697 | - | 0.556 | 0.066 | 0.345 | 0.82 / 0.12 |
+| Wiki navigation _(batch evaluator only)_ | 5744 | - | 0.701 | 0.700 | 0.697 | - | 0.556 | 0.066 | 0.345 | 0.82 / 0.12 |
 | Long video / planning / spatial / LIBERO-Spatial (v0.2 families) _(batch only; zero-shot probe 2,338 q)_ | 3328 | - | 0.686 | 0.676 | 0.548 | - | 0.556 | 0.078 | 0.419 | 0.14 / 0.08 |
 | LongVideoBench val (500) _(zero-shot probe 366 q)_ | 500 | **0.588** | 0.576 | 0.550 | 0.506 | - | 0.604 | 0.095 | 0.557 | 0.00 / 0.00 |
 | OK-VQA answer pool (2,000) _(zero-shot probe 1,000 q)_ | 2000 | **0.893** | 0.851 | - | 0.802 | - | 0.927 | 0.029 | 0.161 | 0.00 / 0.00 |

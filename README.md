@@ -110,9 +110,15 @@ Held-out accuracy of **OmniJev-4B** (Qwen3.5-4B) on the exact serving path, next
 
 **ECE** (expected calibration error) says whether the probabilities can be trusted: it is the average gap between the confidence the model states and how often it is actually right. An ECE of 0.05 means that when the model says "90 %" it is right about 85–95 % of the time; 0 would be perfect, and lower is better. A generative model that only prints an answer has no such number. The values above use the temperatures shipped in `head_meta.json`.
 
-**Latency** (one idle A100, the serving path, a 768-token image budget, all questions about the same image in one request, median of 12 runs with `bench/speed_bench.py`): OmniJev-0.8B answers one question in 160 ms and twelve in 186 ms; OmniJev-2B, 179 ms and 216 ms. OmniJev-4B is being re-measured on the Qwen3.5 backbone; through the served API three typed questions about one image come back in about 240 ms.
+**Latency** (one idle NVIDIA A800-SXM4-40GB, the serving path, a 768-token image budget, all questions about the same image in one request; median of 12 runs, same card and same script for all three: `bench/speed_bench.py`, 12 fixed questions on one image):
 
-The 4B runs the single-pass packed path; the 0.8B and 2B (Qwen3.5 backbones with hybrid attention) run the prefix-branch path, which is why the small models are not faster per request.
+| model | 1 question | 3 questions | 6 questions | 12 questions | per question (12) |
+|---|---|---|---|---|---|
+| OmniJev-4B | 294 ms | 292 ms | 344 ms | 436 ms | 36.3 ms |
+| OmniJev-2B | 217 ms | 220 ms | 243 ms | 277 ms | 23.1 ms |
+| OmniJev-0.8B | 216 ms | 216 ms | 218 ms | 236 ms | 19.6 ms |
+
+All three are Qwen3.5 backbones on the same prefix-branch path, so latency grows with size (216 ms → 294 ms for one question). Packing several questions into one request drops the cost per question from 294 ms to 36.3 ms, because the image is encoded once. This is the first time all three rows were measured on one card; the numbers this page carried before came from different hardware and were not comparable row to row.
 
 ## Quick start
 
