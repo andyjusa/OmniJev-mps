@@ -127,6 +127,20 @@ Held-out accuracy of **OmniJev-4B** (Qwen3.5-4B) on the exact serving path, next
 
 All three are Qwen3.5 backbones on the same prefix-branch path, so latency grows with size (216 ms → 294 ms for one question). Packing several questions into one request drops the cost per question from 294 ms to 36.3 ms, because the image is encoded once. This is the first time all three rows were measured on one card; the numbers this page carried before came from different hardware and were not comparable row to row.
 
+## Apple Silicon (MPS) port
+
+This fork selects MPS automatically when CUDA is unavailable and `torch.backends.mps.is_available()` is true. The MPS path uses float32 and PyTorch's native Qwen3.5 linear-attention implementation; the optional CUDA-only `fla-core` Triton kernels are not enabled. Expect higher memory use and lower throughput than CUDA; choose the 0.8B checkpoint first. The published latency and accuracy measurements above are **not** MPS measurements.
+
+```bash
+uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
+hf download tinnel123/OmniJev-0.8B --local-dir ckpt
+hf download Qwen/Qwen3.5-0.8B --local-dir base
+.venv/bin/python mso/infer.py --ckpt ckpt --model base --image image.jpg \
+  --questions '{"present":{"type":"noul","instructions":"There is a person in the image."}}'
+```
+
+The checkpoint and backbone are downloaded separately and are not included in this repository. Preserve the original [Apache-2.0 license](LICENSE) and check the backbone's own license before redistributing weights.
+
 ## Quick start
 
 ```bash

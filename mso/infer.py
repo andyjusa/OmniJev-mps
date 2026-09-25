@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified for Apple Silicon MPS inference: device selection, dtype and CUDA-only kernel guard.
 """MSO v0.1 inference: a Jev-compatible `system_one(state, questions)` over the trained checkpoint.
 
 Contract (mirrors TypeSafe's POST /v1/systemone answers, plus our two additions):
@@ -38,6 +39,8 @@ class MSO1:
         from transformers import AutoProcessor, AutoModelForImageTextToText
         from peft import PeftModel
         acc = "cuda" if torch.cuda.is_available() else "cpu"
+        if acc == "cpu" and torch.backends.mps.is_available():
+            acc = "mps"
         if acc == "cpu":
             try:
                 import torch_mlu  # noqa: F401
@@ -46,11 +49,12 @@ class MSO1:
             except ImportError:
                 pass
         self.dev = torch.device("cpu" if tiny else acc)
-        self.dtype = torch.float32 if self.dev.type == "cpu" else torch.bfloat16
+        # MPS float32 avoids unsupported/unstable reduced-precision operations in
+        # Qwen3.5's recurrent attention path; CUDA/MLU retain their original dtype.
+        self.dtype = torch.float32 if self.dev.type in ("cpu", "mps") else torch.bfloat16
         self.proc = AutoProcessor.from_pretrained(ckpt, max_pixels=max_pixels)
         if tiny:
             base = T.tiny_backbone(base_model)
-        else:
             lkw = {"dtype": self.dtype}
             if os.environ.get("MSO_ATTN"):
                 lkw["attn_implementation"] = os.environ["MSO_ATTN"]
@@ -80,9 +84,9 @@ class MSO1:
         # hybrid backbones (Qwen3.5: linear-attention layers) cannot isolate options with a mask;
         # they branch from a prefix cache instead (mso/branch.py). MSO_BRANCH=0 off, 2 force on.
         _b = os.environ.get("MSO_BRANCH", "1")
-        self.branch = (_b == "2") or (_b != "0" and BR.is_hybrid(base))
-        if self.branch:
+        if self.branch and self.dev.type == "cuda":
             from mso import fast_kernels as FK
+            FK.enable_fla()                  # Triton kernels are CUDA-only; MPS uses the torch fallback.
             FK.enable_fla()                  # fla Triton kernels for the linear-attention layers (MSO_FLA=0 off)
         self.open_ids = self.coll.tok(T.OPT_OPEN, add_special_tokens=False)["input_ids"]
         self.close_ids = self.coll.tok(T.OPT_CLOSE, add_special_tokens=False)["input_ids"]
