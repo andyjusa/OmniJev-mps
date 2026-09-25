@@ -55,6 +55,7 @@ class MSO1:
         self.proc = AutoProcessor.from_pretrained(ckpt, max_pixels=max_pixels)
         if tiny:
             base = T.tiny_backbone(base_model)
+        else:
             lkw = {"dtype": self.dtype}
             if os.environ.get("MSO_ATTN"):
                 lkw["attn_implementation"] = os.environ["MSO_ATTN"]
@@ -84,10 +85,10 @@ class MSO1:
         # hybrid backbones (Qwen3.5: linear-attention layers) cannot isolate options with a mask;
         # they branch from a prefix cache instead (mso/branch.py). MSO_BRANCH=0 off, 2 force on.
         _b = os.environ.get("MSO_BRANCH", "1")
+        self.branch = (_b == "2") or (_b != "0" and BR.is_hybrid(base))
         if self.branch and self.dev.type == "cuda":
             from mso import fast_kernels as FK
             FK.enable_fla()                  # Triton kernels are CUDA-only; MPS uses the torch fallback.
-            FK.enable_fla()                  # fla Triton kernels for the linear-attention layers (MSO_FLA=0 off)
         self.open_ids = self.coll.tok(T.OPT_OPEN, add_special_tokens=False)["input_ids"]
         self.close_ids = self.coll.tok(T.OPT_CLOSE, add_special_tokens=False)["input_ids"]
         self.pad_id = self.coll.tok.pad_token_id if self.coll.tok.pad_token_id is not None else 0
