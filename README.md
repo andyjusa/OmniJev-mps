@@ -111,6 +111,8 @@ Held-out accuracy of **OmniJev-4B** (Qwen3.5-4B) on the exact serving path, next
 | Super Mario Bros | 735 | – | – | – | – | **0.464** | 0.339 | 0.184 |
 | POPE object hallucination (yes/no) | 9000 | – | – | – | – | 0.867 | **0.902** | 0.007 |
 
+**Three rows were measured on an incomplete input.** RoboArena, JAT and Super Mario Bros come from families whose records carry more than one still, and until now the serving path encoded only the first of them, so those questions were in effect answered from a single frame. The fix and re-measured numbers ship together in the next release; we are leaving the figures above as they were measured rather than quietly restating them.
+
 **ECE** (expected calibration error) says whether the probabilities can be trusted: it is the average gap between the confidence the model states and how often it is actually right. An ECE of 0.05 means that when the model says "90 %" it is right about 85–95 % of the time; 0 would be perfect, and lower is better. A generative model that only prints an answer has no such number. The values above use the temperatures shipped in `head_meta.json`.
 
 **Latency** (one idle NVIDIA A800-SXM4-40GB, the serving path, a 768-token image budget, all questions about the same image in one request; median of 12 runs, same card and same script for all three: `bench/speed_bench.py`, 12 fixed questions on one image):
