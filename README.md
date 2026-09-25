@@ -91,7 +91,7 @@ Held-out accuracy of **OmniJev-4B** (Qwen3.5-4B) on the exact serving path, next
 | LIBERO-10 robot decisions | 1504 | 0.551 | 0.247 | 0.771 | 0.724 | 0.299 | **0.807** | 0.031 |
 | Mind2Web test (task / website / domain) | 1500 | 0.401 | 0.193 | 0.596 | 0.631 | 0.303 | **0.733** | 0.038 |
 | Grid pointing, 96 cells (web) | 1500 | 0.384 | – | 0.474 | 0.625 | 0.421 | **0.737** | 0.021 |
-| Charades-STA video events | 1500 | 0.390 | 0.363 | 0.811 | 0.826 | 0.543 | **0.859** | 0.021 |
+| Self-built event-timing questions (videos from the Charades-STA training set) | 1500 | 0.390 | 0.363 | 0.811 | 0.826 | 0.543 | **0.859** | 0.021 |
 | Catch game frames | 1504 | 0.409 | 0.383 | 0.661 | 0.728 | 0.151 | **0.870** | 0.016 |
 | HaGRID gestures + fire/smoke/weapons | 1500 | 0.529 | 0.620 | 0.969 | 0.984 | 0.683 | **0.987** | 0.009 |
 | OK-VQA answer pool | 1500 | 0.793 | – | 0.656 | 0.765 | **0.860** | 0.809 | 0.021 |
@@ -110,6 +110,8 @@ Held-out accuracy of **OmniJev-4B** (Qwen3.5-4B) on the exact serving path, next
 | JAT racing / paddle games (Enduro, Skiing, Pong) | 1500 | – | – | – | – | 0.259 | **0.589** | 0.061 |
 | Super Mario Bros | 735 | – | – | – | – | **0.464** | 0.339 | 0.184 |
 | POPE object hallucination (yes/no) | 9000 | – | – | – | – | 0.867 | **0.902** | 0.007 |
+
+**How to read the two columns.** POPE and LongVideoBench are held out completely: no data from either ever entered training, so the gap there is generalisation. Mind2Web uses the dataset's own train split for training and its official test splits here. Every other row is a question pool we built ourselves, with 8 % of the rows held out by a hash of the row id. The backbone column is zero-shot on all of them, so outside the first two rows the gap measures what training on that family buys, not a like-for-like benchmark.
 
 **Three rows were measured on an incomplete input.** RoboArena, JAT and Super Mario Bros come from families whose records carry more than one still, and until now the serving path encoded only the first of them, so those questions were in effect answered from a single frame. The fix and re-measured numbers ship together in the next release; we are leaving the figures above as they were measured rather than quietly restating them.
 
