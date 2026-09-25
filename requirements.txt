@@ -1,6 +1,7 @@
 # Modified for MPS validation: Qwen3.5's video processor requires torchvision.
 torch>=2.4
 torchvision
+transformers>=5.0
 peft>=0.15
 accelerate
 safetensors
