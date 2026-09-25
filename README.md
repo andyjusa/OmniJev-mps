@@ -141,6 +141,8 @@ hf download Qwen/Qwen3.5-0.8B --local-dir base
 
 The checkpoint and backbone are downloaded separately and are not included in this repository. Preserve the original [Apache-2.0 license](LICENSE) and check the backbone's own license before redistributing weights.
 
+Validation (Apple Silicon, PyTorch 2.14.0, Transformers 5.17.0): the released 0.8B checkpoint and backbone loaded on MPS with float32; inference from outside the repository returned `noul`, `choice`, and `score` answers for a generated red-square image. This is a functional smoke test, not an accuracy benchmark or validation of the 2B/4B models.
+
 ## Quick start
 
 ```bash
