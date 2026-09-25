@@ -77,6 +77,9 @@ OmniJev 是一个 *System One* 决策模型。你不是让它写字，而是给�
 <td><img src="docs/media/events.gif" width="100%"><br><sub><b>判断视频里发生了什么</b> — 事情发生了没有、从哪一帧开始、人还在不在画面里、在做什么。</sub></td>
 <td><img src="docs/media/stopwatch.gif" width="100%"><br><sub><b>十个留出样例，一个秒表</b> — 一张照片、一个手机屏幕、一盘棋、一个机器人视角、一整段视频；秒表走的就是模型实际用的时间。</sub></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/media/audio.gif" width="100%"><br><sub><b>用看的方式听</b> — 五秒声音画成频谱图和波形：这是什么声音、是不是人发出的、有没有突发的响声、有多响。仓库里另有<a href="docs/media/audio.mp4">带真实声音的那一版</a>。</sub></td>
+</tr>
 </table>
 
 ## 成绩

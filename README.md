@@ -77,6 +77,9 @@ Every clip below is a held-out episode the model never saw; every clock is a mea
 <td><img src="docs/media/events.gif" width="100%"><br><sub><b>Judging what happened in a video</b> — did the event happen, in which frame it starts, is the person still in view, what is being done.</sub></td>
 <td><img src="docs/media/stopwatch.gif" width="100%"><br><sub><b>Ten held-out items, one stopwatch</b> — a photo, a phone screen, a chess board, a robot view, a whole video; the clock runs exactly as long as the model took.</sub></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/media/audio.gif" width="100%"><br><sub><b>Listening by looking</b> — five seconds of sound drawn as a spectrogram and a waveform: which sound it is, whether a person made it, whether it contains a sharp burst, how loud. <a href="docs/media/audio.mp4">The clip with the actual audio</a> is next to it in the repository.</sub></td>
+</tr>
 </table>
 
 ## Results
